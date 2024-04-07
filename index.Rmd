@@ -1,0 +1,117 @@
+---
+title: ''
+output: bookdown::html_document2
+---
+
+<img src="https://i.imgur.com/6U6q5jQ.png"/>
+
+
+<h1>Social Analytics and Strategic Intelligence</h1>
+
+<h2>Session 2: Maps</h2>
+
+
+
+```{r klippy, echo=FALSE, include=TRUE}
+klippy::klippy(position = c('top', 'right'))
+```
+
+
+```{r}
+library(sf)
+linkWorld_gpkg="https://github.com/SocialAnalytics-StrategicIntelligence/TablesAndMaps/raw/main/maps/worldMap.gpkg"
+sf::st_layers(linkWorld_gpkg)
+```
+
+```{r}
+countries=read_sf(linkWorld_gpkg,layer="countryBorders")
+rivers=read_sf(linkWorld_gpkg,layer="riverLines")
+cities=read_sf(linkWorld_gpkg,layer="cityPoints")
+```
+
+```{r}
+library(ggplot2)
+baseLayer=ggplot(data=countries)  + geom_sf(fill='grey90') + theme_light()
+final=baseLayer + geom_sf(data=rivers, color='blue') + geom_sf(data=cities, color='red') 
+final
+
+```
+
+```{r}
+linkBrazil_gpkg="https://github.com/SocialAnalytics-StrategicIntelligence/TablesAndMaps/raw/main/maps/brazilMaps_5641.gpkg"
+sf::st_layers(linkBrazil_gpkg)
+
+```
+```{r}
+brazil=read_sf(linkBrazil_gpkg,layer="country")
+brazil_rivers=read_sf(linkBrazil_gpkg,layer="rivers")
+brazil_cities=read_sf(linkBrazil_gpkg,layer="cities")
+brazil_centroid=read_sf(linkBrazil_gpkg,layer="centroid")
+```
+
+
+```{r}
+library(ggplot2)
+baseLayer=ggplot(data=brazil)  + geom_sf(fill='grey90') + theme_light() 
+final=baseLayer + geom_sf(data=brazil_rivers, color='blue') + geom_sf(data=brazil_cities, color='orange') + geom_sf(data=brazil_centroid, color='red',size=5) +
+  coord_sf(datum = st_crs(brazil))
+
+final
+
+```
+
+
+
+```{r}
+linkVulne='https://github.com/SocialAnalytics-StrategicIntelligence/TablesAndMaps/raw/main/maps/theMapAndData_long.geojson'
+vulne_long=read_sf(linkVulne)
+names(vulne_long)
+```
+
+
+```{r}
+vulne_long[vulne_long$isCatNum,]
+```
+
+```{r}
+ggplot(data=vulne_long[vulne_long$isNum,]) + theme_light() +
+    geom_sf(aes(fill = as.numeric(variable_value)), color=NA) + facet_wrap(~Year)
+```
+
+```{r}
+ggplot(data=vulne_long[vulne_long$isCatNum,]) + theme_light() +
+    geom_sf(aes(fill = variable_value), color=NA) + facet_wrap(variable~Year)
+```
+
+```{r}
+ggplot(data=vulne_long[vulne_long$isCatNum,]) + theme_light() +
+    geom_sf(aes(fill = variable_value), color=NA) + facet_grid(variable~Year)
+```
+
+```{r}
+ggplot(data=vulne_long[vulne_long$isCat,]) + theme_light() +
+    geom_sf(aes(fill = variable_value), color=NA) + facet_grid(variable~Year)
+```
+
+```{r}
+linkVulneYears='https://github.com/SocialAnalytics-StrategicIntelligence/TablesAndMaps/raw/main/maps/theMapAndData_after10.geojson'
+vulne_wideYear=read_sf(linkVulneYears)
+names(vulne_wideYear)
+```
+```{r}
+ggplot(data=vulne_wideYear) + theme_light() +
+    geom_sf(aes(fill = after10), color=NA)
+```
+
+
+
+```{r}
+linkVulneRegion='https://github.com/SocialAnalytics-StrategicIntelligence/TablesAndMaps/raw/main/maps/theMapAndData_region_after10.geojson'
+vulne_wideRegion=read_sf(linkVulneRegion)
+names(vulne_wideRegion)
+```
+```{r}
+ggplot(data=vulne_wideRegion) + theme_light() +
+    geom_sf(aes(fill = after10), color=NA)
+```
+
