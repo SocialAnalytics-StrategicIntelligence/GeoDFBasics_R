@@ -16,12 +16,15 @@ output: bookdown::html_document2
 klippy::klippy(position = c('top', 'right'))
 ```
 
+# Exercise 1
 
 ```{r}
+rm(list = ls())
 library(sf)
-linkWorld_gpkg="https://github.com/SocialAnalytics-StrategicIntelligence/TablesAndMaps/raw/main/maps/worldMap.gpkg"
+linkWorld_gpkg="https://github.com/SocialAnalytics-StrategicIntelligence/GeoDFBasics_py/raw/main/maps/worldMap.gpkg"
 sf::st_layers(linkWorld_gpkg)
 ```
+
 
 ```{r}
 countries=read_sf(linkWorld_gpkg,layer="countryBorders")
@@ -37,81 +40,100 @@ final
 
 ```
 
+
+
+# Exercise 2
+
+
+
+
 ```{r}
-linkBrazil_gpkg="https://github.com/SocialAnalytics-StrategicIntelligence/TablesAndMaps/raw/main/maps/brazilMaps_5641.gpkg"
-sf::st_layers(linkBrazil_gpkg)
+linkPeru_gpkg="https://github.com/SocialAnalytics-StrategicIntelligence/GeoDFBasics_py/raw/main/maps/peruMap.gpkg"
+sf::st_layers(linkPeru_gpkg)
 
 ```
+
+
 ```{r}
-brazil=read_sf(linkBrazil_gpkg,layer="country")
-brazil_rivers=read_sf(linkBrazil_gpkg,layer="rivers")
-brazil_cities=read_sf(linkBrazil_gpkg,layer="cities")
-brazil_centroid=read_sf(linkBrazil_gpkg,layer="centroid")
+peru=read_sf(linkPeru_gpkg,layer="border")
+peru_rivers=read_sf(linkPeru_gpkg,layer="rivers")
+peru_cities=read_sf(linkPeru_gpkg,layer="cities")
+```
+
+
+```{r}
+baseLayer=ggplot(data=peru)  + geom_sf(fill='grey90') + theme_light()
+final=baseLayer + geom_sf(data=peru_rivers, color='blue') + geom_sf(data=peru_cities, color='red') 
+final
+
+```
+
+# Exercise 3
+
+```{r}
+linkPeru_rp_gpkg="https://github.com/SocialAnalytics-StrategicIntelligence/GeoDFBasics_py/raw/main/maps/peruMap_5389.gpkg"
+sf::st_layers(linkPeru_rp_gpkg)
+```
+
+```{r}
+peru=read_sf(linkPeru_rp_gpkg,layer="border")
+peru_rivers=read_sf(linkPeru_rp_gpkg,layer="rivers")
+peru_cities=read_sf(linkPeru_rp_gpkg,layer="cities")
+peru_air=read_sf(linkPeru_rp_gpkg,layer="airports")
+```
+
+
+
+```{r}
+baseLayer=ggplot(data=peru)  + geom_sf(fill='grey90') + theme_light()
+final=baseLayer + geom_sf(data=peru_rivers, color='blue')  + geom_sf(data=peru_air, color='black') + geom_sf(data=peru_cities, color='red') +
+  coord_sf(datum = st_crs(peru))
+final
+
+```
+
+# Exercise 4
+
+```{r}
+americ_rp_gpkg="https://github.com/SocialAnalytics-StrategicIntelligence/GeoDFBasics_py/raw/main/maps/America_2023_prjed.gpkg"
+sf::st_layers(americ_rp_gpkg)
+```
+
+
+```{r}
+#st_crs(ame)
+ame=read_sf(americ_rp_gpkg,layer="countries")
+ame_cen=read_sf(americ_rp_gpkg,layer="centroids")
 ```
 
 
 ```{r}
 library(ggplot2)
-baseLayer=ggplot(data=brazil)  + geom_sf(fill='grey90') + theme_light() 
-final=baseLayer + geom_sf(data=brazil_rivers, color='blue') + geom_sf(data=brazil_cities, color='orange') + geom_sf(data=brazil_centroid, color='red',size=5) +
-  coord_sf(datum = st_crs(brazil))
+baseLayer=ggplot(data=ame)  + geom_sf(fill='grey90') + theme_light() 
+final=baseLayer + geom_sf(data=ame_cen,aes(color=Total_ei5_cat),size=2+ame_cen$Total_ei5) +
+    guides(size=NULL) +
+  coord_sf(datum = st_crs(ame))
 
 final
 
 ```
-
-
+# Challenge
 
 ```{r}
-linkVulne='https://github.com/SocialAnalytics-StrategicIntelligence/TablesAndMaps/raw/main/maps/theMapAndData_long.geojson'
-vulne_long=read_sf(linkVulne)
-names(vulne_long)
+linkFrag='https://github.com/SocialAnalytics-StrategicIntelligence/GeoDFBasics_py/raw/main/maps/fragilitymap.gpkg'
+sf::st_layers(linkFrag)
 ```
 
 
 ```{r}
-vulne_long[vulne_long$isCatNum,]
-```
+fragil=read_sf(linkFrag,layer="after10")
 
-```{r}
-ggplot(data=vulne_long[vulne_long$isNum,]) + theme_light() +
-    geom_sf(aes(fill = as.numeric(variable_value)), color=NA) + facet_wrap(~Year)
-```
-
-```{r}
-ggplot(data=vulne_long[vulne_long$isCatNum,]) + theme_light() +
-    geom_sf(aes(fill = variable_value), color=NA) + facet_wrap(variable~Year)
-```
-
-```{r}
-ggplot(data=vulne_long[vulne_long$isCatNum,]) + theme_light() +
-    geom_sf(aes(fill = variable_value), color=NA) + facet_grid(variable~Year)
-```
-
-```{r}
-ggplot(data=vulne_long[vulne_long$isCat,]) + theme_light() +
-    geom_sf(aes(fill = variable_value), color=NA) + facet_grid(variable~Year)
-```
-
-```{r}
-linkVulneYears='https://github.com/SocialAnalytics-StrategicIntelligence/TablesAndMaps/raw/main/maps/theMapAndData_after10.geojson'
-vulne_wideYear=read_sf(linkVulneYears)
-names(vulne_wideYear)
-```
-```{r}
-ggplot(data=vulne_wideYear) + theme_light() +
-    geom_sf(aes(fill = after10), color=NA)
+names(fragil)
 ```
 
 
-
 ```{r}
-linkVulneRegion='https://github.com/SocialAnalytics-StrategicIntelligence/TablesAndMaps/raw/main/maps/theMapAndData_region_after10.geojson'
-vulne_wideRegion=read_sf(linkVulneRegion)
-names(vulne_wideRegion)
-```
-```{r}
-ggplot(data=vulne_wideRegion) + theme_light() +
+ggplot(data=fragil) + theme_light() +
     geom_sf(aes(fill = after10), color=NA)
 ```
 
