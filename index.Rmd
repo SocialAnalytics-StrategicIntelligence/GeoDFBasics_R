@@ -12,27 +12,31 @@ output: bookdown::html_document2
 
 
 
-```{r klippy, echo=FALSE, include=TRUE}
+```{r klippy, echo=FALSE, include=TRUE, echo=FALSE}
 klippy::klippy(position = c('top', 'right'))
 ```
 
 # Exercise 1
 
-```{r}
+```{r, echo=FALSE, echo=FALSE}
 rm(list = ls())
 library(sf)
 linkWorld_gpkg="https://github.com/SocialAnalytics-StrategicIntelligence/GeoDFBasics_py/raw/main/maps/worldMap.gpkg"
-sf::st_layers(linkWorld_gpkg)
+
+```
+
+```{r, echo=TRUE}
+sf::st_layers(linkWorld_gpkg) # a link to github data
 ```
 
 
-```{r}
+```{r, echo=TRUE}
 countries=read_sf(linkWorld_gpkg,layer="countryBorders")
 rivers=read_sf(linkWorld_gpkg,layer="riverLines")
 cities=read_sf(linkWorld_gpkg,layer="cityPoints")
 ```
 
-```{r}
+```{r, echo=TRUE}
 library(ggplot2)
 baseLayer=ggplot(data=countries)  + geom_sf(fill='grey90') + theme_light()
 final=baseLayer + geom_sf(data=rivers, color='blue') + geom_sf(data=cities, color='red') 
@@ -47,21 +51,21 @@ final
 
 
 
-```{r}
+```{r, echo=FALSE}
 linkPeru_gpkg="https://github.com/SocialAnalytics-StrategicIntelligence/GeoDFBasics_py/raw/main/maps/peruMap.gpkg"
 sf::st_layers(linkPeru_gpkg)
 
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 peru=read_sf(linkPeru_gpkg,layer="border")
 peru_rivers=read_sf(linkPeru_gpkg,layer="rivers")
 peru_cities=read_sf(linkPeru_gpkg,layer="cities")
 ```
 
 
-```{r}
+```{r, echo=TRUE}
 baseLayer=ggplot(data=peru)  + geom_sf(fill='grey90') + theme_light()
 final=baseLayer + geom_sf(data=peru_rivers, color='blue') + geom_sf(data=peru_cities, color='red') 
 final
@@ -70,12 +74,12 @@ final
 
 # Exercise 3
 
-```{r}
+```{r, echo=FALSE}
 linkPeru_rp_gpkg="https://github.com/SocialAnalytics-StrategicIntelligence/GeoDFBasics_py/raw/main/maps/peruMap_5389.gpkg"
 sf::st_layers(linkPeru_rp_gpkg)
 ```
 
-```{r}
+```{r, echo=FALSE}
 peru=read_sf(linkPeru_rp_gpkg,layer="border")
 peru_rivers=read_sf(linkPeru_rp_gpkg,layer="rivers")
 peru_cities=read_sf(linkPeru_rp_gpkg,layer="cities")
@@ -84,7 +88,7 @@ peru_air=read_sf(linkPeru_rp_gpkg,layer="airports")
 
 
 
-```{r}
+```{r, echo=TRUE}
 baseLayer=ggplot(data=peru)  + geom_sf(fill='grey90') + theme_light()
 final=baseLayer + geom_sf(data=peru_rivers, color='blue')  + geom_sf(data=peru_air, color='black') + geom_sf(data=peru_cities, color='red') +
   coord_sf(datum = st_crs(peru))
@@ -94,20 +98,20 @@ final
 
 # Exercise 4
 
-```{r}
+```{r, echo=FALSE}
 americ_rp_gpkg="https://github.com/SocialAnalytics-StrategicIntelligence/GeoDFBasics_py/raw/main/maps/America_2023_prjed.gpkg"
 sf::st_layers(americ_rp_gpkg)
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 #st_crs(ame)
 ame=read_sf(americ_rp_gpkg,layer="countries")
 ame_cen=read_sf(americ_rp_gpkg,layer="centroids")
 ```
 
 
-```{r}
+```{r, echo=TRUE}
 library(ggplot2)
 baseLayer=ggplot(data=ame)  + geom_sf(fill='grey90') + theme_light() 
 final=baseLayer + geom_sf(data=ame_cen,aes(color=Total_ei5_cat),size=2+ame_cen$Total_ei5) +
@@ -117,22 +121,24 @@ final=baseLayer + geom_sf(data=ame_cen,aes(color=Total_ei5_cat),size=2+ame_cen$T
 final
 
 ```
+
+
 # Challenge
 
-```{r}
+```{r, echo=FALSE}
 linkFrag='https://github.com/SocialAnalytics-StrategicIntelligence/GeoDFBasics_py/raw/main/maps/fragilitymap.gpkg'
 sf::st_layers(linkFrag)
 ```
 
 
-```{r}
+```{r, echo=FALSE}
 fragil=read_sf(linkFrag,layer="after10")
 
 names(fragil)
 ```
 
 
-```{r}
+```{r, echo=TRUE}
 ggplot(data=fragil) + theme_light() +
     geom_sf(aes(fill = after10), color=NA)
 ```
